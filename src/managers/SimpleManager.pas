@@ -20,6 +20,9 @@ type
 
 implementation
 
+uses
+  ormbr.dml.generator.firebird;
+
 { TSimpleManager }
 
 constructor TSimpleManager<T>.Create(const conn: IDBConnection);
