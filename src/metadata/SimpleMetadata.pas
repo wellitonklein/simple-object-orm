@@ -23,7 +23,10 @@ implementation
 
 uses
   ormbr.database.interfaces,
-  ormbr.modeldb.compare, System.SysUtils;
+  ormbr.modeldb.compare,
+  ormbr.ddl.generator.firebird,
+  ormbr.metadata.firebird,
+  System.SysUtils;
 
 { TSimpleMetadata }
 

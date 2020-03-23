@@ -6,13 +6,15 @@ uses
   SimpleObjectORM.Interf,
   Data.DB,
   SimpleMetadata.Interf,
-  ormbr.factory.interfaces;
+  ormbr.factory.interfaces,
+  SimpleManager.Interf;
 
 type
-  TSimpleObjectORM = class(TInterfacedObject, ISimpleObjectORM)
+  TSimpleObjectORM<T: class, constructor> = class(TInterfacedObject, ISimpleObjectORM)
   private
     FDatabase: TCustomConnection;
     FConnector: IDBConnection;
+    FManager: ISimpleManager;
     function getConnector: IDBConnection;
   public
     constructor Create;
@@ -20,27 +22,29 @@ type
     class function New: ISimpleObjectORM;
     function setDatabase(const value: TCustomConnection): ISimpleObjectORM;
     function metadata: ISimpleMetadata;
+    function manager: ISimpleManager;
   end;
 
 implementation
 
 uses
-  SimpleMetadata, Connector;
+  SimpleMetadata,
+  Connector, SimpleManager;
 
 { TSimpleObjectORM }
 
-constructor TSimpleObjectORM.Create;
+constructor TSimpleObjectORM<T>.Create;
 begin
 
 end;
 
-destructor TSimpleObjectORM.Destroy;
+destructor TSimpleObjectORM<T>.Destroy;
 begin
 
   inherited;
 end;
 
-function TSimpleObjectORM.getConnector: IDBConnection;
+function TSimpleObjectORM<T>.getConnector: IDBConnection;
 begin
   if (not Assigned(FConnector)) then
   begin
@@ -50,17 +54,27 @@ begin
   Result := FConnector;
 end;
 
-function TSimpleObjectORM.metadata: ISimpleMetadata;
+function TSimpleObjectORM<T>.manager: ISimpleManager;
+begin
+  if (not Assigned(FManager)) then
+  begin
+    FManager := TSimpleManager<T>.New(getConnector);
+  end;
+
+  Result := FManager;
+end;
+
+function TSimpleObjectORM<T>.metadata: ISimpleMetadata;
 begin
   Result := TSimpleMetadata.New(getConnector);
 end;
 
-class function TSimpleObjectORM.New: ISimpleObjectORM;
+class function TSimpleObjectORM<T>.New: ISimpleObjectORM;
 begin
   Result := Self.Create;
 end;
 
-function TSimpleObjectORM.setDatabase(
+function TSimpleObjectORM<T>.setDatabase(
   const value: TCustomConnection): ISimpleObjectORM;
 begin
   Result := Self;
