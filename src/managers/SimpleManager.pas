@@ -15,7 +15,7 @@ type
     constructor Create(const conn: IDBConnection);
     destructor Destroy; override;
     class function New(const conn: IDBConnection): ISimpleManager;
-    function manager: TManagerObjectSet;
+    function objectData: TManagerObjectSet;
   end;
 
 implementation
@@ -36,7 +36,7 @@ begin
   inherited;
 end;
 
-function TSimpleManager<T>.manager: TManagerObjectSet;
+function TSimpleManager<T>.objectData: TManagerObjectSet;
 begin
   Result := FManager;
 end;

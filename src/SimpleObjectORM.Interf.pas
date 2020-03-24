@@ -5,7 +5,8 @@ interface
 uses
   Data.DB,
   SimpleMetadata.Interf,
-  SimpleManager.Interf;
+  SimpleManager.Interf,
+  SimpleCriteria.Interf;
 
 type
 
@@ -14,6 +15,7 @@ type
     function setDatabase(const value: TCustomConnection): ISimpleObjectORM;
     function metadata: ISimpleMetadata;
     function manager: ISimpleManager;
+    function criteria: ISimpleCriteria;
   end;
 
 implementation

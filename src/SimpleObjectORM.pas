@@ -7,7 +7,8 @@ uses
   Data.DB,
   SimpleMetadata.Interf,
   ormbr.factory.interfaces,
-  SimpleManager.Interf;
+  SimpleManager.Interf,
+  SimpleCriteria.Interf;
 
 type
   TSimpleObjectORM<T: class, constructor> = class(TInterfacedObject, ISimpleObjectORM)
@@ -15,6 +16,7 @@ type
     FDatabase: TCustomConnection;
     FConnector: IDBConnection;
     FManager: ISimpleManager;
+    FCriteria: ISimpleCriteria;
     function getConnector: IDBConnection;
   public
     constructor Create;
@@ -23,19 +25,32 @@ type
     function setDatabase(const value: TCustomConnection): ISimpleObjectORM;
     function metadata: ISimpleMetadata;
     function manager: ISimpleManager;
+    function criteria: ISimpleCriteria;
   end;
 
 implementation
 
 uses
   SimpleMetadata,
-  Connector, SimpleManager;
+  Connector,
+  SimpleManager,
+  SimpleCriteria;
 
 { TSimpleObjectORM }
 
 constructor TSimpleObjectORM<T>.Create;
 begin
 
+end;
+
+function TSimpleObjectORM<T>.criteria: ISimpleCriteria;
+begin
+  if (not Assigned(FCriteria)) then
+  begin
+    FCriteria := TSimpleCriteria.New(getConnector);
+  end;
+
+  Result := FCriteria;
 end;
 
 destructor TSimpleObjectORM<T>.Destroy;
